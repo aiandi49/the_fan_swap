@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Fan Swap — Case File № 0219</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+  :root {
+    --paper: #F8F3E8;
+    --card: #FFFFFF;
+    --card-tint: #F0E6D2;
+    --ink: #221D18;
+    --ink-soft: #4A4038;
+    --ink-faint: #8A7A6C;
+    --berry: #7A2138;
+    --berry-soft: #A8455C;
+    --gold: #B8963E;
+    --gold-soft: #D4AC58;
+    --rose: #E9C9C2;
+    --line: rgba(90,74,56,0.18);
+    --shadow-sm: 0 2px 8px rgba(28,20,14,0.07);
+    --shadow-md: 0 10px 34px rgba(28,20,14,0.10);
+    --shadow-lg: 0 22px 64px rgba(28,20,14,0.15);
+    --grad-hero: linear-gradient(135deg, #6C1A30 0%, #8C3049 32%, #B85A47 62%, #C99A4C 100%);
+    --grad-callout: linear-gradient(135deg, #F4E1C5 0%, #EAC9AE 100%);
+    --watermark: rgba(122,33,56,0.06);
+    --glow-1: rgba(122,33,56,0.10);
+    --glow-2: rgba(184,150,62,0.14);
+    --grain-opacity: 0.035;
+    color-scheme: light;
+  }
+
+  [data-theme="dark"] {
+    --paper: #020817;
+    --card: #0A1628;
+    --card-tint: #0D1D33;
+    --ink: #E0F0FF;
+    --ink-soft: #A0C4E0;
+    --ink-faint: #6C8CAE;
+    --berry: #00AEFF;
+    --berry-soft: #33C2FF;
+    --gold: #00E5CC;
+    --gold-soft: #4DF0DE;
+    --rose: #0D2545;
+    --line: rgba(0,174,255,0.20);
+    --shadow-sm: 0 2px 12px rgba(0,174,255,0.15);
+    --shadow-md: 0 14px 44px rgba(0,174,255,0.18);
+    --shadow-lg: 0 26px 76px rgba(0,229,204,0.18);
+    --grad-hero: linear-gradient(135deg, #020817 0%, #0A1628 35%, #00AEFF 78%, #00E5CC 100%);
+    --grad-callout: linear-gradient(135deg, #0A1628 0%, #0D2545 100%);
+    --watermark: rgba(0,174,255,0.10);
+    --glow-1: rgba(0,174,255,0.18);
+    --glow-2: rgba(0,229,204,0.16);
+    --grain-opacity: 0.025;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    transition: background 0.35s ease, color 0.35s ease;
+    position: relative;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(ellipse 70% 45% at 15% -5%, var(--glow-1), transparent 60%),
+      radial-gradient(ellipse 55% 40% at 90% 15%, var(--glow-2), transparent 55%);
+    transition: background-image 0.35s ease;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: var(--grain-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  ::selection { background: var(--gold-soft); color: #1c1210; }
+
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  h2.section-title { position: relative; }
+  h2.section-title::after {
+    content: "";
+    display: block;
+    width: 46px;
+    height: 3px;
+    margin-top: 14px;
+    background: linear-gradient(90deg, var(--gold), var(--berry));
+    border-radius: 2px;
+  }
+
+  .theme-toggle {
+    position: fixed; top: 18px; right: 18px; z-index: 50;
+    display: flex; align-items: center; gap: 8px;
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 999px; padding: 8px 14px 8px 12px;
+    box-shadow: var(--shadow-sm); cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+    letter-spacing: 0.06em; color: var(--ink-soft);
+    -webkit-tap-highlight-color: transparent; user-select: none;
+  }
+  .theme-toggle svg { width: 14px; height: 14px; display: block; }
+  .theme-toggle .sun { display: none; }
+  [data-theme="dark"] .theme-toggle .sun { display: block; }
+  [data-theme="dark"] .theme-toggle .moon { display: none; }
+
+  .hero {
+    position: relative; background: var(--grad-hero); z-index: 1;
+    padding: 96px 24px 150px; text-align: center; overflow: hidden;
+  }
+  .hero::before{
+    content:""; position:absolute; inset:0;
+    background-image: radial-gradient(circle at 18% 22%, rgba(255,255,255,0.16), transparent 42%),
+                       radial-gradient(circle at 82% 78%, rgba(255,255,255,0.10), transparent 45%);
+    pointer-events:none;
+  }
+  .hero-inner { position: relative; max-width: 640px; margin: 0 auto; }
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(255,247,238,0.82); margin: 0 0 22px;
+  }
+  .eyebrow .dot { color: rgba(255,247,238,0.5); margin: 0 8px; }
+  .hero h1 {
+    font-family: 'Fraunces', serif; font-optical-sizing: auto;
+    font-weight: 600; font-size: clamp(44px, 9vw, 78px);
+    line-height: 0.98; color: #FFF7EE; margin: 0 0 20px;
+    letter-spacing: -0.01em;
+  }
+  .hero .sub {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 400;
+    font-size: clamp(18px, 3vw, 23px); color: rgba(255,247,238,0.92);
+    max-width: 540px; margin: 0 auto 34px; line-height: 1.5;
+  }
+  .byline {
+    font-family: 'IBM Plex Mono', monospace; font-size: 12.5px;
+    letter-spacing: 0.04em; color: rgba(255,247,238,0.75);
+  }
+  .byline strong { color: #FFF7EE; font-weight: 500; }
+
+  .intro-card {
+    position: relative; background: var(--card); border-radius: 22px;
+    box-shadow: var(--shadow-lg); padding: 52px 48px; margin: -100px auto 0;
+    max-width: 720px; z-index: 5;
+  }
+  .intro-card p { margin: 0 0 16px; color: var(--ink-soft); font-size: 17px; }
+  .intro-card p:last-child { margin-bottom: 0; }
+  .dropcap:first-letter {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 68px;
+    line-height: 0.75; float: left; padding: 6px 10px 0 0; color: var(--berry);
+  }
+
+  /* photo duo */
+  .photo-duo {
+    position: relative; z-index: 1; max-width: 720px; margin: 26px auto 0; padding: 0 24px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  .photo-frame {
+    position: relative; border-radius: 16px; overflow: hidden;
+    box-shadow: var(--shadow-md); aspect-ratio: 4/5; background: var(--card-tint);
+  }
+  .photo-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .photo-frame .ptag {
+    position: absolute; top: 12px; left: 12px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 10.5px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    background: var(--card); color: var(--ink); padding: 5px 10px; border-radius: 999px;
+    box-shadow: var(--shadow-sm);
+  }
+  .photo-frame.after .ptag { background: var(--berry); color: #FFF7EE; }
+
+  main { padding: 60px 0 40px; }
+
+  section.piece { position: relative; z-index: 1; margin: 0 auto 64px; max-width: 760px; padding: 0 24px; }
+
+  .card {
+    position: relative; background: var(--card); border-radius: 20px;
+    box-shadow: var(--shadow-md); padding: 56px 44px; overflow: hidden;
+  }
+
+  .watermark-letter {
+    position: absolute; top: -0.12em; right: 0.02em;
+    font-family: 'Fraunces', serif; font-weight: 900; font-size: 200px;
+    line-height: 1; color: var(--watermark); pointer-events: none;
+    user-select: none; z-index: 0;
+  }
+
+  .card-inner { position: relative; z-index: 1; }
+
+  .section-eyebrow {
+    font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold);
+    margin: 0 0 10px; display: flex; align-items: center; gap: 10px;
+  }
+  .section-eyebrow::before { content: ""; width: 22px; height: 1px; background: var(--gold); display: inline-block; }
+
+  h2.section-title {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: clamp(28px, 5vw, 40px); line-height: 1.1;
+    margin: 0 0 26px; color: var(--ink); max-width: 92%;
+  }
+
+  .card-inner p { color: var(--ink-soft); font-size: 16.5px; margin: 0 0 18px; }
+  .card-inner p:last-child { margin-bottom: 0; }
+
+  .pullquote {
+    margin: 30px 0 6px; padding: 26px 28px; background: var(--card-tint);
+    border-left: 3px solid var(--berry); border-radius: 4px 14px 14px 4px;
+  }
+  .pullquote p {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 500;
+    font-size: clamp(19px, 2.6vw, 23px); line-height: 1.42; color: var(--ink);
+    margin: 0 0 12px !important;
+  }
+  .rec-tag {
+    font-family: 'IBM Plex Mono', monospace; font-size: 10.5px;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .rec-tag .rec-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--berry-soft); display: inline-block; }
+  .rec-tag.warn .rec-dot { background: var(--gold); }
+
+  .timeline { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 34px 0 8px; }
+  .timeline .tl-item { border-top: 2px solid var(--line); padding-top: 12px; }
+  .timeline .tl-item.hit { border-top-color: var(--berry); }
+  .tl-year { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--gold); margin-bottom: 6px; letter-spacing: 0.04em; }
+  .tl-label { font-size: 13.5px; color: var(--ink-soft); line-height: 1.4; }
+
+  .divider {
+    position: relative; z-index: 1;
+    max-width: 760px; margin: 0 auto 64px; padding: 0 24px;
+    display: flex; align-items: center; gap: 14px; color: var(--ink-faint);
+  }
+  .divider .line { flex: 1; height: 1px; background: var(--line); }
+  .divider .mark { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.1em; }
+
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .duo .voice { background: var(--card-tint); border-radius: 14px; padding: 30px 26px; }
+  .duo .voice h3 {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 500;
+    font-size: 20px; margin: 0 0 14px; color: var(--berry);
+  }
+  .duo .voice ul { margin: 0; padding: 0; list-style: none; }
+  .duo .voice li {
+    font-size: 15px; color: var(--ink-soft); padding: 7px 0;
+    border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 10px;
+  }
+  .duo .voice li:last-child { border-bottom: none; }
+  .duo .voice li span:last-child { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--ink-faint); white-space: nowrap; }
+
+  .callout { position: relative; z-index: 1; max-width: 760px; margin: 0 auto 70px; padding: 0 24px; }
+  .callout-inner { background: var(--grad-callout); border-radius: 20px; padding: 52px 44px; box-shadow: var(--shadow-md); }
+  .callout-inner .section-eyebrow { color: var(--berry); }
+  .callout-inner .section-eyebrow::before { background: var(--berry); }
+  .callout-inner h2 { color: #3B2313; }
+  [data-theme="dark"] .callout-inner h2 { color: #F3E7DC; }
+  .callout-list { list-style: none; margin: 20px 0 0; padding: 0; }
+  .callout-list li {
+    position: relative; padding-left: 30px; margin-bottom: 16px;
+    font-size: 16px; line-height: 1.55; color: #4A2E17;
+  }
+  [data-theme="dark"] .callout-list li { color: #E9D9C6; }
+  .callout-list li:last-child { margin-bottom: 0; }
+  .callout-list li::before {
+    content: ""; position: absolute; left: 0; top: 7px;
+    width: 9px; height: 9px; border-radius: 50%; background: var(--berry);
+  }
+
+  .closing { position: relative; z-index: 1; max-width: 620px; margin: 0 auto 60px; padding: 0 24px; text-align: center; }
+  .closing p.big {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 500;
+    font-size: clamp(22px, 4vw, 30px); line-height: 1.45; color: var(--ink); margin: 0 0 26px;
+  }
+  .closing .attribution { font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.05em; color: var(--ink-faint); }
+
+  footer {
+    position: relative; z-index: 1;
+    text-align: center; padding: 44px 24px 70px; color: var(--ink-faint);
+    font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: 0.05em;
+    border-top: 1px solid var(--line); max-width: 760px; margin: 0 auto;
+  }
+  footer p { margin: 6px 0; }
+
+  @media (max-width: 720px) {
+    .intro-card { padding: 40px 28px; margin-top: -70px; border-radius: 18px; }
+    .card { padding: 40px 26px; }
+    .callout-inner { padding: 40px 26px; }
+    .watermark-letter { font-size: 120px; }
+    .timeline { grid-template-columns: repeat(2, 1fr); row-gap: 22px; }
+    .duo { grid-template-columns: 1fr; }
+    .photo-duo { grid-template-columns: 1fr; }
+    .hero { padding: 80px 20px 130px; }
+    h2.section-title { max-width: 100%; }
+  }
+
+  @media (max-width: 420px) {
+    body { font-size: 16px; }
+    .hero { padding: 72px 18px 120px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle light and dark mode">
+  <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+  <span id="themeLabel">Dark</span>
+</button>
+
+<div class="hero">
+  <div class="hero-inner">
+    <p class="eyebrow">A FIELD GUIDE <span class="dot">·</span> CASE FILE № 0219</p>
+    <h1>The Fan Swap</h1>
+    <p class="sub">From bronze chandelier to a crystal-trimmed ceiling fan — six steps, one afternoon, no electrician required.</p>
+    <p class="byline">Filed from a kitchen mid-renovation · <strong>The Home &amp; Hearth Dispatch</strong></p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="intro-card">
+    <p class="dropcap">Every kitchen eventually asks for a little more than light. This one's had a bronze five-arm chandelier doing beautiful, stationary work for years — warm shades, no moving parts, nothing to stir the air on the hot afternoons that matter most. It's not broken. It's just missing a function the room has started to want. What follows is a record of what it takes to take it down and hang something that both glows and moves in its place: a crystal-trimmed ceiling fan with clear blades and a beaded glass edge.</p>
+    <p>This one carries a little more responsibility than a straight light swap. A fan spins, wobbles under load, and pulls more weight than a static fixture — so the ceiling box itself has to be rated for it, not just strong enough to hold it still. Same principle as before, one extra check along the way.</p>
+    <p>We're publishing it because the question comes up every time someone eyes a fan with real presence at the store: do I need an electrician for this? Usually, no — but the fan-rated box is where people cut corners, and it's the one corner not worth cutting. Here's exactly how it goes.</p>
+  </div>
+</div>
+
+<div class="photo-duo">
+  <div class="photo-frame">
+    <img src="before-fixture.jpeg" alt="Existing five-arm bronze chandelier with amber glass shades">
+    <span class="ptag">Before</span>
+  </div>
+  <div class="photo-frame after">
+    <img src="after-fixture.jpeg" alt="New ceiling fan with crystal beaded trim and clear blades">
+    <span class="ptag">After</span>
+  </div>
+</div>
+
+<main>
+
+  <section class="piece" id="overview">
+    <div class="card">
+      <div class="watermark-letter">6</div>
+      <div class="card-inner">
+        <p class="section-eyebrow">At A Glance</p>
+        <h2 class="section-title">Six Steps, In Order</h2>
+        <p>Follow these in sequence — the order matters more than the pace. Take your time on the first two; everything after moves quickly once the power is confirmed off.</p>
+        <div class="timeline">
+          <div class="tl-item hit"><div class="tl-year">01</div><div class="tl-label">Kill the power at the breaker, not just the switch.</div></div>
+          <div class="tl-item"><div class="tl-year">02</div><div class="tl-label">Bring down the old chandelier and disconnect the wiring.</div></div>
+          <div class="tl-item hit"><div class="tl-year">03</div><div class="tl-label">Confirm the box is rated for a ceiling fan, not just weight.</div></div>
+          <div class="tl-item"><div class="tl-year">04</div><div class="tl-label">Mount the fan bracket and hanging pin to the box.</div></div>
+          <div class="tl-item"><div class="tl-year">05</div><div class="tl-label">Wire the motor, attach blades, and balance them.</div></div>
+          <div class="tl-item"><div class="tl-year">06</div><div class="tl-label">Breaker on, test fan and light, pair the remote.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="piece" id="kit">
+    <div class="card">
+      <div class="watermark-letter">✦</div>
+      <div class="card-inner">
+        <p class="section-eyebrow">Before You Climb The Ladder</p>
+        <h2 class="section-title">The Kit</h2>
+        <div class="duo">
+          <div class="voice">
+            <h3>Tools</h3>
+            <ul>
+              <li><span>Non-contact voltage tester</span><span>required</span></li>
+              <li><span>Flathead + Phillips screwdrivers</span><span>required</span></li>
+              <li><span>Wire strippers</span><span>required</span></li>
+              <li><span>Needle-nose pliers</span><span>required</span></li>
+              <li><span>Step ladder</span><span>required</span></li>
+              <li><span>Blade balancing kit</span><span>if fan wobbles</span></li>
+              <li><span>A second pair of hands</span><span>strongly rec.</span></li>
+            </ul>
+          </div>
+          <div class="voice">
+            <h3>Materials</h3>
+            <ul>
+              <li><span>New ceiling fan + mounting hardware</span><span>in box</span></li>
+              <li><span>Fan-rated brace bar or box</span><span>if not already rated</span></li>
+              <li><span>Wire nuts</span><span>usually included</span></li>
+              <li><span>Bulbs to fixture spec</span><span>buy ahead</span></li>
+              <li><span>Remote receiver / wall control</span><span>if included</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="pullquote">
+          <p>"You are not required to be a licensed electrician to do this in your own home in most jurisdictions — though it's worth a quick check with your local building department if yours requires a permit for fixture swaps."</p>
+          <span class="rec-tag"><span class="rec-dot"></span>Before You Start</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><div class="line"></div><span class="mark">01 / 06</span><div class="line"></div></div>
+
+  <section class="piece" id="step-01">
+    <div class="card">
+      <div class="watermark-letter">01</div>
+      <div class="card-inner">
+        <p class="section-eyebrow">Step One</p>
+        <h2 class="section-title">Kill the Power at the Breaker</h2>
+        <p>Not the wall switch — the breaker. Head to the panel, flip the circuit that feeds the kitchen light, then return and flip the wall switch too, just so no one turns it on while you're mid-air.</p>
+        <p>Test with a non-contact voltage tester at the fixture before you touch anything.</p>
+        <div class="pullquote">
+          <p>"This step is non-negotiable, and it's the one place where a shortcut isn't worth it."</p>
+          <span class="rec-tag warn"><span class="rec-dot"></span>Safety Critical</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><div class="line"></div><span class="mark">02 / 06</span><div class="line"></div></div>
+
+  <section class="piece" id="step-02">
+    <div class="card">
+      <div class="watermark-letter">02</div>
+      <div class="card-inner">
+        <p class="section-eyebrow">Step Two</p>
+        <h2 class="section-title">Bring Down the Old Chandelier</h2>
+        <p>Remove the glass shades and bulbs first, then take out the mounting screws or the decorative nut holding the fixture's canopy to the ceiling box. Let the canopy drop gently — it's hanging on wires and chain, not hinges.</p>
+        <p>Disconnect the wire nuts, unwind the wires, and take the whole fixture down. Take a photo of the wiring before you do this — you likely won't need it, but it's a nice insurance policy.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><div class="line"></div><span class="mark">03 / 06</span><div class="line"></div></div>
+
+  <section class="piece" id="step-03">
+    <div class="card">
+      <div class="watermark-letter">03</div>
+      <div class="card-inner">
+        <p class="section-eyebrow">Step Three</p>
+        <h2 class="section-title">Confirm the Box Is Fan-Rated</h2>
+        <p>This is the one place a ceiling fan asks for more than a chandelier did. A spinning fan doesn't just hang — it vibrates and pulls dynamic load, so it needs a box specifically labeled "fan-rated" or UL-listed for fan support, not just a box strong enough to hold a static weight.</p>
+        <p>Look for that rating stamped inside the box. If it isn't there, this is the moment to swap in a fan-rated brace bar across the ceiling joists — skipping this step is how fans end up wobbling loose over time.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><div class="line"></div><span class="mark">04 / 06</span><div class="line"></div></div>
+
+  <section class="piece" id="step-04">
+    <div class="card">
+      <div class="watermark-letter">04</div>
+      <div class="card-inner">
+        <p class="section-eyebrow">Step Four</p>
+        <h2 class="section-title">Mount the Fan Bracket</h2>
+        <p>Attach the fan's mounting bracket to the ceiling box using the provided screws, then set the ball hanger or hanging pin in place. This becomes the anchor point the whole motor housing will hook onto in the next step — most fans let you hang the motor here hands-free while you wire it.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><div class="line"></div><span class="mark">05 / 06</span><div class="line"></div></div>
+
+  <section class="piece" id="step-05">
+    <div class="card">
+      <div class="watermark-letter">05</div>
+      <div class="card-inner">
+        <p class="section-eyebrow">Step Five</p>
+        <h2 class="section-title">Hang the Motor, Then Wire It</h2>
+        <p>Lift the fan motor housing and hook it onto the hanging pin — it should hold its own weight there, freeing both your hands for wiring. Match wires by color: black (or blue, if there's a separate light kit) to black, white to white, and the bare copper ground to the green ground screw. If there's a receiver for a remote, it typically sits inline between the household wiring and the fan's own wires.</p>
+        <p>Twist each pair with a wire nut and give it a gentle tug to confirm it holds, then tuck everything up into the box and slide the canopy up to cover the connections, securing it with its screws.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><div class="line"></div><span class="mark">06 / 06</span><div class="line"></div></div>
+
+  <section class="piece" id="step-06">
+    <div class="card">
+      <div class="watermark-letter">06</div>
+      <div class="card-inner">
+        <p class="section-eyebrow">Step Six</p>
+        <h2 class="section-title">Blades, Bulbs, and the First Spin</h2>
+        <p>Attach the blades to the motor arms, install the bulbs to spec, and restore power at the breaker. Run the fan first at low speed — if it wobbles, a balancing kit (a small clip-on weight) on the offending blade usually solves it in a minute or two. Then test the light, and pair the remote or wall control if one came with it.</p>
+        <p>Once it's spinning true and the light's steady, tighten any remaining screws and step back — the kitchen has a new centerpiece that finally does two jobs at once.</p>
+        <div class="pullquote">
+          <p>"A bronze chandelier held its ground beautifully for years. Today it steps aside for something that actually moves the air."</p>
+          <span class="rec-tag"><span class="rec-dot"></span>Job Complete</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="callout">
+    <div class="callout-inner">
+      <p class="section-eyebrow">A Note, If You're Not Sure This Is a DIY Job</p>
+      <h2 class="section-title" style="max-width:100%;">When to Call It In</h2>
+      <ul class="callout-list">
+        <li>If the ceiling box needs to move — not just receive a new fixture — that's beyond a swap and into a wiring project.</li>
+        <li>A box that isn't fan-rated and can't be swapped for one without cutting into the ceiling is a real hand-it-off signal.</li>
+        <li>Aluminum wiring, knob-and-tube, or anything that doesn't match a modern setup is also a signal to call it in.</li>
+        <li>If you're not comfortable working near a breaker panel, that discomfort is information, not a failure of nerve.</li>
+        <li>A spinning fixture deserves a box built to handle motion — when in doubt, add the fan-rated brace bar or call someone who will.</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="closing">
+    <p class="big">"Filed from a kitchen mid-renovation, where the bronze chandelier has been retired and the new crystal-trimmed fan is finally moving air and catching light at once. May yours do the same."</p>
+    <p class="attribution">— The Home &amp; Hearth Dispatch</p>
+  </div>
+
+</main>
+
+<footer>
+  <p>Estimated labor — 75 to 105 minutes, solo. Not a rewiring project — a swap, with one extra check.</p>
+  <p>Case File № 0219 — Kitchen &amp; Hearth Desk.</p>
+</footer>
+
+<script>
+  (function() {
+    var root = document.documentElement;
+    var toggle = document.getElementById('themeToggle');
+    var label = document.getElementById('themeLabel');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var current = prefersDark ? 'dark' : 'light';
+    root.setAttribute('data-theme', current);
+    updateLabel();
+
+    toggle.addEventListener('click', function() {
+      current = current === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', current);
+      updateLabel();
+    });
+
+    function updateLabel() {
+      label.textContent = current === 'dark' ? 'Light' : 'Dark';
+    }
+  })();
+</script>
+
+</body>
+</html>
